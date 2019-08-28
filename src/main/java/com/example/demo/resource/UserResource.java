@@ -1,8 +1,8 @@
 package com.example.demo.resource;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 
+@CrossOrigin(origins= "*")
 @RestController
-@RequestMapping(value = "/rest/users")
+@RequestMapping(value = "/")
 public class UserResource {
 
 	@Autowired
@@ -20,16 +21,12 @@ public class UserResource {
 	
  	@GetMapping("/all")
     public List<User> getAll(){
- 		 
-        System.out.println("aaaaaaaaaaaaa");
         return userRepository.findAll();
-       
     }
     
-    @PostMapping(value = "/load")
-    public List<User> persist(@RequestBody final User user){
+    @PostMapping(value = "/signup")
+    public void signup(@RequestBody User user){
     	userRepository.save(user);
-    	return userRepository.findAll();
     }
 }
 

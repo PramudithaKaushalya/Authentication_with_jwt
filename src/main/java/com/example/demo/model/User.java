@@ -1,7 +1,5 @@
 package com.example.demo.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,26 +9,27 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "users")
-public class User  implements Serializable{
+public class User{
 
 	@Id
-	@GeneratedValue(strategy= GenerationType.AUTO)
+	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	private Integer id;
-//	@Column(name = "id")
-//	private Integer id;
 	@Column(name = "name")
 	private String name;
 	@Column(name = "salary")
-	private String salary;
+    private String salary;
+    @Column(name = "password")
+	private String password;
 	
 	public User() {
 		
 	}
 	
-public User(Integer id, String name, String salary) {
+    public User(Integer id, String name, String salary, String password) {
 		this.id = id;
-		this.name= name;
-		this.salary = salary;
+		this.name = name;
+        this.salary = salary;
+        this.password = password;
 	}
 	
 	
@@ -51,5 +50,11 @@ public User(Integer id, String name, String salary) {
     }
     public void setSalary(String salary){
         this.salary=salary;
+    }
+    public String getPassword(){
+        return password;
+    }
+    public void setPassword(String password){
+        this.password = password;
     }    
 }
