@@ -3,6 +3,7 @@ package com.example.demo.resource;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import net.bytebuddy.asm.Advice.Exit;
+
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 
@@ -33,10 +37,25 @@ public class UserResource {
         userRepository.save(user);
     }
 
+    @PostMapping(value = "/signin")
+    public String signin(@RequestBody User user ) {
+        String name= user.name;
+        String password= user.password;
+        User userData= userRepository.findByName(name);
+        String pwd = userData.password;
+        if(password.equals(pwd)){
+            return "true";
+        }
+        else{
+            return "false";
+        } 
+    }
+
     @GetMapping("/delete/{id}")
     public String DeleteById(@PathVariable("id") Integer id) {
         userRepository.deleteById(id);
-        return "Deleted....";
+        return "User delete successfully!!!";
+        
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/update/{id}")

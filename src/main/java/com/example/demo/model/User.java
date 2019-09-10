@@ -1,5 +1,7 @@
 package com.example.demo.model;
 
+import java.sql.Blob;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,16 +22,19 @@ public class User{
 	public String salary;
     @Column(name = "password")
 	public String password;
-	
-	public User() {
-		
-	}
-	
-    public User(Integer id, String name, String salary, String password) {
-		this.id = id;
-		this.name = name;
+	@Column(name = "image")
+    public Blob image;
+
+    public User() {
+
+    }
+
+    public User(Integer id, String name, String salary, String password, Blob image) {
+        this.id = id;
+        this.name = name;
         this.salary = salary;
         this.password = password;
+        this.image = image;
 	}
 	
 	
@@ -56,5 +61,11 @@ public class User{
     }
     public void setPassword(String password){
         this.password = password;
+    }
+    public Blob getImage(){
+        return image;
+    }
+    public void setImage(Blob image){
+        this.image = image;
     }    
 }
