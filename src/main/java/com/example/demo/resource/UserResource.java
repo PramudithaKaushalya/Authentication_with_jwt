@@ -33,17 +33,18 @@ public class UserResource {
     }
 
     @PostMapping(value = "/signin")
-    public String signin(@RequestBody User user ) {
+    public Integer signin(@RequestBody User user ) {
         String name= user.name;
         String password= user.password;
         User userData= userRepository.findByName(name);
         String pwd = userData.password;
+        Integer id = userData.getId();
+        System.out.println("qqqqqqqqqqqqqqq"+id);
         if(password.equals(pwd)){
-            return "true";
+            return id;
+        } else{
+            return 0;
         }
-        else{
-            return "false";
-        } 
     }
 
     @GetMapping("/delete/{id}")
@@ -57,6 +58,8 @@ public class UserResource {
     public void updateUser(@RequestBody User user, @PathVariable("id") Integer id) {
         User userToUpdate = userRepository.getOne(id);
         userToUpdate.setName(user.name);
+        userToUpdate.setEmail(user.email);
+        userToUpdate.setContact(user.contact);
         userToUpdate.setSalary(user.salary);
         userToUpdate.setPassword(user.password);
         userRepository.save(userToUpdate);
@@ -65,7 +68,6 @@ public class UserResource {
 
     @GetMapping("/search/{id}")
     public Optional<User> getOne(@PathVariable("id") Integer id) {
-        System.out.println(id);
         return userRepository.findById(id);
     }
 }

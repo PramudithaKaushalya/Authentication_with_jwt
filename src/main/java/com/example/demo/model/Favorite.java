@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -30,6 +31,8 @@ public class Favorite{
     @Column(name = "place")
     public String place;
 
+    @OneToOne(mappedBy = "favorite")
+    private User user;
     
     public Favorite() {
 
@@ -94,5 +97,13 @@ public class Favorite{
     }
     public void setPlace(String place){
         this.place= place;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }    
 }
