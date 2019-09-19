@@ -1,25 +1,19 @@
 package com.example.demo.model;
 
 import java.sql.Blob;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import java.util.Set;
+import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "user")
-public class User{
+@Table(name = "users")
+public class User {
 
 	@Id
-	@GeneratedValue(strategy= GenerationType.IDENTITY)
-	private Integer id;
-	@Column(name = "name")
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name = "user_id")
+	private Integer user_id;
+    @Column(name = "name")
     public String name;
     @Column(name = "email")
 	public String email;
@@ -32,30 +26,29 @@ public class User{
 	@Column(name = "image")
     public Blob image;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "favorite_id", referencedColumnName = "id")
-    private Favorite favorite;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+    private Set<UserFavorite> userFavorites ;
+    
 
     public User() {
 
     }
 
-    public User(Integer id, String name, String email, String salary, String password, String contact, Blob image) {
-        this.id = id;
+    public User( String name, String email, String salary, String password, String contact, Blob image) {
         this.name = name;
-        this.email = email;
+        this.email = email; 
         this.salary = salary;
         this.password = password;
         this.contact = contact;
         this.image = image;
 	}
 	
-	
-	public Integer getId(){
-        return id;
+    public Integer getUser_id() {
+        return user_id;
     }
-    public void setId(Integer id){
-        this.id=id;
+    public void setUser_id(Integer user_id) {
+        this.user_id = user_id;
     }
     public String getName(){
         return name;
@@ -92,5 +85,14 @@ public class User{
     }
     public void setImage(Blob image){
         this.image = image;
+    }
+    public Set<UserFavorite> getUserFavorites(){
+        return userFavorites;
+    }
+    public void setUserFavorites(Set<UserFavorite> userFavorites){
+        this.userFavorites=userFavorites;
+    }
+    public void addUserFavorite(UserFavorite userFavorite){
+        this.userFavorites.add(userFavorite);
     }    
 }

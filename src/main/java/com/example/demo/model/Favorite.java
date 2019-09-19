@@ -1,21 +1,17 @@
 package com.example.demo.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import java.util.Set;
+import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "favorites")
 public class Favorite{
 
     @Id
-	@GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id;
-    
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name = "favorite_id")
+    private Integer favorite_id;
     @Column(name = "user_name")
     public String user_name;
     @Column(name = "food")
@@ -30,16 +26,16 @@ public class Favorite{
 	public String hobby;
     @Column(name = "place")
     public String place;
-
-    @OneToOne(mappedBy = "favorite")
-    private User user;
     
+    @JsonIgnore
+    @OneToMany(mappedBy = "favorite",fetch = FetchType.LAZY)
+    private Set<UserFavorite> userFavorites ;
+
     public Favorite() {
 
     }
 
-    public Favorite(Integer id, String user_name, String food, String drink, String animal, String bird, String hobby, String place) {
-        this.id = id;
+    public Favorite(String user_name, String food, String drink, String animal, String bird, String hobby, String place) {
         this.user_name = user_name;
         this.food = food;
         this.drink = drink;
@@ -50,11 +46,11 @@ public class Favorite{
 	}
 	
 	
-	public Integer getId(){
-        return id;
+    public Integer getFavorite_id() {
+        return favorite_id;
     }
-    public void setId(Integer id){
-        this.id=id;
+    public void setFavorite_id(Integer favorite_id) {
+        this.favorite_id = favorite_id;
     }
     public String getUser_name(){
         return user_name;
@@ -98,12 +94,14 @@ public class Favorite{
     public void setPlace(String place){
         this.place= place;
     }
-
-    public User getUser() {
-        return user;
+    public Set<UserFavorite> getUserFavorites(){
+        return userFavorites;
+    }
+    public void setUserFavorites(Set<UserFavorite> userFavorites) {
+        this.userFavorites = userFavorites;
+    }
+    public void addUserFavorite(UserFavorite userFavorite){
+        this.userFavorites.add(userFavorite);
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }    
 }
