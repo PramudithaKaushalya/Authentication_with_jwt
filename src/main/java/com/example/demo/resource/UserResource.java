@@ -3,42 +3,17 @@ package com.example.demo.resource;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-//import lombok.RequiredArgsConstructor;
-//import lombok.extern.slf4j.Slf4j;
-//import com.example.demo.mapper.UserMapper;
-//import com.example.demo.dto.UserDTO;
+import org.springframework.web.bind.annotation.*;
 import com.example.demo.model.User;
-//import com.example.demo.repository.UserFavoriteRepository;
 import com.example.demo.repository.UserRepository;
-//import com.example.demo.service.UserService;
-
-// @Slf4j
-//@RequiredArgsConstructor
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "/")
 public class UserResource {
 
-    // private final UserService userService;
-    // private UserMapper userMapper;
-
     @Autowired
     private UserRepository userRepository;
-
-    // @GetMapping("/a")
-    // public List<UserDTO> findAll() {
-    //     return userMapper.toUserDTOs(userService.findAll());
-    // }
 
     @GetMapping("/all")
     public List<User> getAll() {

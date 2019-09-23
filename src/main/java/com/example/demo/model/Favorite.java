@@ -12,6 +12,8 @@ public class Favorite{
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "favorite_id")
     private Integer id;
+    @Column(name = "user_id")
+    public Integer user_id;
     @Column(name = "user_name")
     public String user_name;
     @Column(name = "food")
@@ -35,7 +37,8 @@ public class Favorite{
 
     }
 
-    public Favorite(String user_name, String food, String drink, String animal, String bird, String hobby, String place) {
+    public Favorite( Integer user_id, String user_name, String food, String drink, String animal, String bird, String hobby, String place) {
+        this.user_id = user_id;
         this.user_name = user_name;
         this.food = food;
         this.drink = drink;
@@ -105,6 +108,14 @@ public class Favorite{
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(Integer user_id) {
+        this.user_id = user_id;
     }
 
 }
