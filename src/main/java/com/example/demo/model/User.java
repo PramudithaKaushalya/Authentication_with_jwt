@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import java.sql.Blob;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,7 +29,7 @@ public class User {
 
     @JsonIgnore
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
-    private Set<UserFavorite> userFavorites ;
+    private List<UserFavorite> userFavorites ;
     
 
     public User() {
@@ -86,10 +87,10 @@ public class User {
     public void setImage(Blob image){
         this.image = image;
     }
-    public Set<UserFavorite> getUserFavorites(){
+    public List<UserFavorite> getUserFavorites(){
         return userFavorites;
     }
-    public void setUserFavorites(Set<UserFavorite> userFavorites){
+    public void setUserFavorites(List<UserFavorite> userFavorites){
         this.userFavorites=userFavorites;
     }
     public void addUserFavorite(UserFavorite userFavorite){
