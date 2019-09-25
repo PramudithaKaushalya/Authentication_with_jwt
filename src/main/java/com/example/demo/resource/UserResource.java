@@ -68,4 +68,22 @@ public class UserResource {
     public User getUser(@PathVariable("name") String name) {
         return userRepository.findByName(name);
     }
+
+    @PostMapping(value = "/change")
+    public Boolean change(@RequestBody User user) {
+        Integer id = user.getUser_id();
+        String password = user.password;
+        String new_password = user.salary;
+
+        User data = userRepository.getOne(id);
+        String pwd = data.getPassword();
+
+        if(password.equals(pwd)){
+            data.setPassword(new_password);
+            userRepository.save(data);
+            return true;
+        } else{
+            return false;
+        }
+    }
 }

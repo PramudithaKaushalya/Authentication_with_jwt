@@ -24,7 +24,7 @@ public class UserFavorite {
     }
     
     @JsonBackReference
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH},fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
 
     public User getUser() {

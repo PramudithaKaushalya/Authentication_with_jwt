@@ -56,9 +56,11 @@ public class FavoriteResource {
     }
 
     @GetMapping("/deletefavo/{id}")
-    public String DeleteById(@PathVariable("id") Integer id) {
-        favoriteRepository.deleteById(id);
-        return "Favorites Delete Successfully!!!";
+    public String DeleteById(@PathVariable("id") Favorite id) {
+        UserFavorite userFavorite = userFavoriteRepository.findByFavorite(id);
+        Integer userfavid = userFavorite.getId();
+        userFavoriteRepository.deleteById(userfavid);
+        return "Delete Favorites Successfully!!!";
         
     }
 
