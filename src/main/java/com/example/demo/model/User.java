@@ -1,98 +1,108 @@
 package com.example.demo.model;
 
-import java.sql.Blob;
-import java.util.List;
+import com.example.demo.model.audit.DateAudit;
+import org.hibernate.annotations.NaturalId;
 import javax.persistence.*;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {
+            "username"
+        }),
+        @UniqueConstraint(columnNames = {
+            "email"
+        })
+})
+public class User extends DateAudit {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name = "user_id")
-	private Integer user_id;
-    @Column(name = "name")
-    public String name;
-    @Column(name = "email")
-	public String email;
-	@Column(name = "salary")
-	public String salary;
-    @Column(name = "password")
-    public String password;
-    @Column(name = "contact")
-	public String contact;
-	@Column(name = "image")
-    public Blob image;
+    @NotBlank
+    @Size(max = 40)
+    private String name;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
-    private List<UserFavorite> userFavorites ;
-    
+    @NotBlank
+    @Size(max = 15)
+    private String username;
+
+    @NaturalId
+    @NotBlank
+    @Size(max = 40)
+    @Email
+    private String email;
+
+    @NotBlank
+    @Size(max = 100)
+    private String password;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
 
     }
 
-    public User( String name, String email, String salary, String password, String contact, Blob image) {
+    public User(String name, String username, String email, String password) {
         this.name = name;
-        this.email = email; 
-        this.salary = salary;
+        this.username = username;
+        this.email = email;
         this.password = password;
-        this.contact = contact;
-        this.image = image;
-	}
-	
-    public Integer getUser_id() {
-        return user_id;
     }
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+
+    public Long getId() {
+        return id;
     }
-    public String getName(){
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getName() {
         return name;
     }
-    public void setName(String name){
-        this.name=name;
+
+    public void setName(String name) {
+        this.name = name;
     }
-    public String getEmail(){
+
+    public String getEmail() {
         return email;
     }
-    public void setEmail(String email){
-        this.email=email;
+
+    public void setEmail(String email) {
+        this.email = email;
     }
-    public String getSalary(){
-        return salary;
-    }
-    public void setSalary(String salary){
-        this.salary=salary;
-    }
-    public String getPassword(){
+
+    public String getPassword() {
         return password;
     }
-    public void setPassword(String password){
+
+    public void setPassword(String password) {
         this.password = password;
     }
-    public String getContact(){
-        return contact;
+
+    public Set<Role> getRoles() {
+        return roles;
     }
-    public void setContact(String contact){
-        this.contact=contact;
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
-    public Blob getImage(){
-        return image;
-    }
-    public void setImage(Blob image){
-        this.image = image;
-    }
-    public List<UserFavorite> getUserFavorites(){
-        return userFavorites;
-    }
-    public void setUserFavorites(List<UserFavorite> userFavorites){
-        this.userFavorites=userFavorites;
-    }
-    public void addUserFavorite(UserFavorite userFavorite){
-        this.userFavorites.add(userFavorite);
-    }    
 }
