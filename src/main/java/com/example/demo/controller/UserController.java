@@ -1,36 +1,116 @@
 package com.example.demo.controller;
 
 import com.example.demo.payload.*;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.security.UserPrincipal;
-import com.example.demo.security.CurrentUser;
+import com.example.demo.service.UserService;
+import org.slf4j.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.util.StringUtils;
+import org.springframework.security.authentication.AuthenticationManager;
+import com.example.demo.security.JwtTokenProvider;
 
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
-    @GetMapping("/user/me")
-    @PreAuthorize("hasRole('USER')")
-    public UserSummary getCurrentUser(@CurrentUser UserPrincipal currentUser) {
-        UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getName());
-        return userSummary;
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    @Autowired
+    JwtTokenProvider tokenProvider;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAll(@RequestHeader("Authorization") String token) {
+
+        if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+
+            String jwt = token.substring(7);
+            Long userId = tokenProvider.getUserIdFromJWT(jwt);
+            return userService.getAll(userId);
+        }
+        else {
+            LOGGER.warn(">>> User authentication failed");
+            return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
+        }
     }
 
-    @GetMapping("/user/checkUsernameAvailability")
-    public UserIdentityAvailability checkUsernameAvailability(@RequestParam(value = "username") String username) {
-        Boolean isAvailable = !userRepository.existsByUsername(username);
-        return new UserIdentityAvailability(isAvailable);
+    @GetMapping("/get/{id}")
+    public ResponseEntity<?> getOne(@RequestHeader("Authorization") String token, @PathVariable("id") Long id) {
+        if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+
+            String jwt = token.substring(7);
+            Long userId = tokenProvider.getUserIdFromJWT(jwt);        
+            return userService.searchById(id, userId);
+        }
+        else {
+            LOGGER.warn(">>> User authentication failed");
+            return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
+        }
     }
 
-    @GetMapping("/user/checkEmailAvailability")
-    public UserIdentityAvailability checkEmailAvailability(@RequestParam(value = "email") String email) {
-        Boolean isAvailable = !userRepository.existsByEmail(email);
-        return new UserIdentityAvailability(isAvailable);
+    @GetMapping("/name")
+    public ResponseEntity<?> getUserName(@RequestHeader("Authorization") String token) {
+        if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+
+            String jwt = token.substring(7);
+            Long userId = tokenProvider.getUserIdFromJWT(jwt);        
+            return userService.getUserName(userId);
+        }
+        else {
+            LOGGER.warn(">>> User authentication failed");
+            return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
+        }
+    }
+
+    @PostMapping(value = "/resign")
+    public ResponseEntity<?> resignUser(@RequestHeader("Authorization") String token, @RequestBody  Employee employee) {
+
+        if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+
+            String jwt = token.substring(7);
+            Long userId = tokenProvider.getUserIdFromJWT(jwt);
+            return userService.resignEmployee(employee, userId);
+        }
+        else {
+            LOGGER.warn(">>> User authentication failed");
+            return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
+        }
+    }
+
+    @PostMapping(value = "/update/{id}")
+    public ResponseEntity<?> updateUser(@RequestHeader("Authorization") String token, @RequestBody UpdateUser employee, @PathVariable("id") Long id) {
+
+        if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+
+            String jwt = token.substring(7);
+            Long userId = tokenProvider.getUserIdFromJWT(jwt);
+            return userService.updateEmployee(id, employee, userId);
+        }
+        else {
+            LOGGER.warn(">>> User authentication failed");
+            return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
+        }
+    }
+
+    @GetMapping("/supervisor")
+    public ResponseEntity<?> findSupervisors(@RequestHeader("Authorization") String token) {
+
+        if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+
+            String jwt = token.substring(7);
+            Long userId = tokenProvider.getUserIdFromJWT(jwt);
+            return userService.searchSupervisors(userId);
+        }
+        else {
+            LOGGER.warn(">>> User authentication failed");
+            return ResponseEntity.ok(new ApiResponse(false, "Authentication failed"));
+        }
     }
 }

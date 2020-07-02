@@ -1,5 +1,7 @@
 package com.example.demo.repository;
 
+import com.example.demo.model.Department;
+import com.example.demo.model.Role;
 import com.example.demo.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,9 +16,21 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByIdIn(List<Long> userIds);
 
-    Optional<User> findByUsername(String username);
+    User findByUsername(String username);
 
     Boolean existsByUsername(String username);
 
     Boolean existsByEmail(String email);
+
+	User getOne(Long id);
+
+	User findByFirstName(String supervisor);
+
+	List<User> findByStatus(String string);
+
+	boolean existsByUserId(String userId);
+
+	List<User> findByDepartment(Department department);
+
+	List<User> findByRoles(Role role);
 }

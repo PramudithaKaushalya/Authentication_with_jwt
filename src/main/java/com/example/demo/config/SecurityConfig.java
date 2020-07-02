@@ -81,12 +81,41 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.css",
                         "/**/*.js")
                         .permitAll()
-                    .antMatchers("/api/auth/**")
+                    .antMatchers(HttpMethod.GET, "/api/users/**")
                         .permitAll()
-                    .antMatchers("/api/user/checkUsernameAvailability", "/api/user/checkEmailAvailability")
+                    .antMatchers("/api/auth/signup", "/api/auth/signin", "/api/auth/forgot", "/api/auth/forgot_password") 
+                        .permitAll() 
+                    .antMatchers("/api/auth/correct", "/api/auth/change_password", "/api/auth/info")
+                        .hasAnyAuthority("Supervisor", "Permanent", "Probation", "Intern", "Contract", "Admin")    
+                    .antMatchers("/calender/all")
+                        .hasAnyAuthority("Supervisor", "Permanent", "Probation", "Intern", "Contract", "Admin") 
+                    .antMatchers("/calender/set_date")
+                        .hasAuthority("Admin") 
+                    .antMatchers("/contact/**")
                         .permitAll()
-                    .antMatchers(HttpMethod.GET, "/api/polls/**", "/api/users/**")
+                    .antMatchers("/department/all")
+                        .hasAnyAuthority("Supervisor", "Permanent", "Probation", "Intern", "Contract", "Admin") 
+                    .antMatchers("/leave_count/summery/**")
                         .permitAll()
+                    .antMatchers("/leave_count/profile")
+                        .hasAnyAuthority("Supervisor", "Admin")
+                    .antMatchers("/leave_count/profile/**")
+                        .hasAuthority("Admin")    
+                    .antMatchers("/leave/find/**", "/leave/request", "/leave/absent")
+                        .permitAll()
+                    .antMatchers("/leave/all", "/leave/pending", "/leave/delete/**", "/leave/approve/**", "/leave/reject/**")
+                        .hasAnyAuthority("Supervisor", "Admin")    
+                    .antMatchers("/leave_type/all")
+                        .permitAll()
+                    .antMatchers("/user/resign", "/user/update/**", "/user/supervisor", "/role/all")
+                        .hasAuthority("Admin")
+                    .antMatchers("/user/all", "/user/get/**", "/user/name")
+                        .hasAnyAuthority("Supervisor", "Permanent", "Probation", "Intern", "Contract", "Admin") 
+                    .antMatchers("/login", "/forgot", "/leave_history", "/history", "/dashboard", "/add_employee", 
+                                 "/request_leave", "/pending_leaves", "/manage_employee", "/change_password", 
+                                 "/view_profile", "/get_employee", "/leave_calender", "/contact_number", "/attendence", 
+                                 "/one_attendence")  
+                        .permitAll()           
                     .anyRequest()
                         .authenticated();
 
@@ -95,3 +124,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 }
+
+// "Supervisor", "Permanent", "Probation", "Intern", "Contract", "Admin"

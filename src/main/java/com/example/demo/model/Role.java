@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import org.hibernate.annotations.NaturalId;
+
 import javax.persistence.*;
 
 @Entity
@@ -8,13 +9,18 @@ import javax.persistence.*;
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "role_id")
     private Long id;
 
     @Enumerated(EnumType.STRING)
     @NaturalId
-    @Column(length = 60)
+    @Column(name = "name")
     private RoleName name;
 
+    // @JsonIgnore
+    // @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // private List<UserRole> userRoles ;
+    
     public Role() {
 
     }

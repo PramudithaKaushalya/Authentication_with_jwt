@@ -3,8 +3,10 @@ package com.example.demo.payload;
 public class JwtAuthenticationResponse {
     private String accessToken;
     private String tokenType = "Bearer";
+    private Boolean success = true;
 
-    public JwtAuthenticationResponse(String accessToken) {
+    public JwtAuthenticationResponse(Boolean status, String accessToken) {
+        this.success = status;
         this.accessToken = accessToken;
     }
 
@@ -23,4 +25,12 @@ public class JwtAuthenticationResponse {
     public void setTokenType(String tokenType) {
         this.tokenType = tokenType;
     }
+
+    public Boolean getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(Boolean success) {
+        this.success = success;
+    }   
 }
